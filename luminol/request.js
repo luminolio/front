@@ -7,10 +7,10 @@ var VanuatuRequest = (function () {
         this._xhr = _xhr;
         this._url = _url;
         this._event = {
-            progress: function (ROR) { },
-            load: function (ROR) { },
-            error: function (ROR) { },
-            abort: function (ROR) { }
+            progress: function (vror) { },
+            load: function (vror) { },
+            error: function (vror) { },
+            abort: function (vror) { }
         };
         this._xhr = new XMLHttpRequest();
     }
@@ -19,23 +19,26 @@ var VanuatuRequest = (function () {
     };
     VanuatuRequest.prototype.execute = function (method) {
         method = method.toUpperCase();
-        var progress = function (e) {
-            this._event.progress(new RequestObjectResponse_1.default({}));
+        this._xhr.open(method, this._url, true);
+        var progress = function (event) {
+            var percentComplete = event.loaded / event.total * 100;
+            this._event.progress(new RequestObjectResponse_1.default(this, event, {
+                percent: percentComplete
+            }));
         };
-        var load = function (e) {
-            this._event.progress(new RequestObjectResponse_1.default({}));
+        var load = function (event) {
+            this._event.progress(new RequestObjectResponse_1.default(this, event, {}));
         };
-        var fail = function (e) {
-            this._event.progress(new RequestObjectResponse_1.default({}));
+        var fail = function (event) {
+            this._event.progress(new RequestObjectResponse_1.default(this, event, {}));
         };
-        var abort = function (e) {
-            this._event.progress(new RequestObjectResponse_1.default({}));
+        var abort = function (event) {
+            this._event.progress(new RequestObjectResponse_1.default(this, event, {}));
         };
         this._xhr.addEventListener("progress", progress, false);
         this._xhr.addEventListener("load", load, false);
         this._xhr.addEventListener("error", fail, false);
         this._xhr.addEventListener("abort", abort, false);
-        this._xhr.open(method, this._url, true);
     };
     Object.defineProperty(VanuatuRequest.prototype, "header", {
         get: function () {

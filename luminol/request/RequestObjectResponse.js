@@ -1,7 +1,6 @@
 "use strict";
 var VanuatuRequestObjectResponse = (function () {
-    function VanuatuRequestObjectResponse(data) {
-        this.data = data;
+    function VanuatuRequestObjectResponse(xhr, evn, response) {
     }
     return VanuatuRequestObjectResponse;
 }());

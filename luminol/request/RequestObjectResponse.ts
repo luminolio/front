@@ -1,7 +1,7 @@
 import Request from "../Request";
 
 export default class VanuatuRequestObjectResponse{
-  constructor(private data: Object){
+  constructor(xhr: XMLHttpRequest, evn: Event, response: Object){
 
   }
 }
