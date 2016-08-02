@@ -3,7 +3,8 @@ import VanuatuRequestPayload from "./request/RequestPayload";
 import VanuatuRequestObjectResponse from "./request/RequestObjectResponse";
 
 export default class VanuatuRequest{
-		private _event = {
+	protected _payload = "";
+	private   _event   = {
 		progress : function(vror : VanuatuRequestObjectResponse){},
 		load     : function(vror : VanuatuRequestObjectResponse){},
 		error    : function(vror : VanuatuRequestObjectResponse){},

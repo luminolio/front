@@ -3,7 +3,10 @@ var VanuatuRequestPayload = (function () {
     function VanuatuRequestPayload(parent) {
         this.parent = parent;
     }
-    VanuatuRequestPayload.prototype.object = function () {
+    VanuatuRequestPayload.prototype.object = function (object) {
+        return this.parent;
+    };
+    VanuatuRequestPayload.prototype.htmlForm = function (form) {
         return this.parent;
     };
     return VanuatuRequestPayload;

@@ -6,6 +6,7 @@ var VanuatuRequest = (function () {
     function VanuatuRequest(_xhr, _url) {
         this._xhr = _xhr;
         this._url = _url;
+        this._payload = "";
         this._event = {
             progress: function (vror) { },
             load: function (vror) { },

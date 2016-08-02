@@ -5,7 +5,11 @@ export default class VanuatuRequestPayload{
 		// lest rock
 	}
 
-	object(){
+	object(object: Object){
 		return this.parent;
+	}
+
+	htmlForm(form: HTMLFormElement){
+		return this.parent;	
 	}
 }
