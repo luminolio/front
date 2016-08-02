@@ -1,38 +1,13 @@
-class RequestPayload{
-	constructor(public parent: Request){
-		// lest rock
-	}
+import VanuatuRequestHeader from "./request/RequestHeader";
+import VanuatuRequestPayload from "./request/RequestPayload";
+import VanuatuRequestObjectResponse from "./request/RequestObjectResponse";
 
-	object(){
-		return this.parent;
-	}
-}
-
-
-
-
-class RequestHeader{
-	constructor(public parent: Request){
-		// make peace
-	}
-}
-
-
-
-
-class RequestObjectResponse{
-
-}
-
-
-
-
-export class Request{
+export default class VanuatuRequest{
 		private _event = {
-		progress : function(RequestObjectResponse){},
-		load     : function(RequestObjectResponse){},
-		error    : function(RequestObjectResponse){},
-		abort    : function(RequestObjectResponse){}
+		progress : function(ROR: VanuatuRequestObjectResponse){},
+		load     : function(ROR: VanuatuRequestObjectResponse){},
+		error    : function(ROR: VanuatuRequestObjectResponse){},
+		abort    : function(ROR: VanuatuRequestObjectResponse){}
 	};
 
 	constructor(
@@ -48,14 +23,52 @@ export class Request{
 
   execute(method: string){
     method = method.toUpperCase();
+
+		let progress = function(e){
+			this._event.progress(
+				new VanuatuRequestObjectResponse({
+					// add data here
+				})
+			);
+		};
+
+		let load = function(e){
+			this._event.progress(
+				new VanuatuRequestObjectResponse({
+					// add data here
+				})
+			);
+		};
+
+		let fail = function(e){
+			this._event.progress(
+				new VanuatuRequestObjectResponse({
+					// add data here
+				})
+			);
+		};
+
+		let abort = function(e){
+			this._event.progress(
+				new VanuatuRequestObjectResponse({
+					// add data here
+				})
+			);
+		};
+
+		this._xhr.addEventListener("progress" , progress , false);
+		this._xhr.addEventListener("load"     , load     , false);
+		this._xhr.addEventListener("error"    , fail     , false);
+		this._xhr.addEventListener("abort"    , abort    , false);
+
     this._xhr.open(method, this._url, true);
   }
 
 	get header(){
-		return new RequestHeader(this);
+		return new VanuatuRequestHeader(this);
 	}
 
 	get payload(){
-		return new RequestPayload(this);
+		return new VanuatuRequestPayload(this);
 	}
 }
