@@ -4,6 +4,7 @@ import VanuatuRequestObjectResponse from "./request/RequestObjectResponse";
 
 export default class VanuatuRequest{
 	protected _payload = "";
+	private   _xhr     : XMLHttpRequest;
 	private   _event   = {
 		progress : function(vror : VanuatuRequestObjectResponse){},
 		load     : function(vror : VanuatuRequestObjectResponse){},
@@ -11,10 +12,7 @@ export default class VanuatuRequest{
 		abort    : function(vror : VanuatuRequestObjectResponse){}
 	};
 
-	constructor(
-    private _xhr : XMLHttpRequest,
-    private _url : string
-  ){
+	constructor(private _url : string){
 		this._xhr = new XMLHttpRequest();
 	}
 
@@ -55,6 +53,8 @@ export default class VanuatuRequest{
 		this._xhr.addEventListener("load"     , load     , false);
 		this._xhr.addEventListener("error"    , fail     , false);
 		this._xhr.addEventListener("abort"    , abort    , false);
+
+		this._xhr.send(this._payload);
   }
 
 	get header(){
@@ -63,5 +63,9 @@ export default class VanuatuRequest{
 
 	get payload(){
 		return new VanuatuRequestPayload(this);
+	}
+
+	get xhr(){
+		return this.xhr;
 	}
 }
