@@ -1,6 +1,9 @@
 export default class VanuatuRequestResponse{
-  private _blob = null;
-  private _url  = null;
+  private _blob: Blob   = null;
+  private _text: string = null;
+  private _json: any    = null;
+  private _url : string = null;
+
   private _mime = {
     images : [
       "image/svg+xml",
@@ -11,8 +14,9 @@ export default class VanuatuRequestResponse{
   };
 
   constructor(
-    private _event: Event,
-    private _xhr: XMLHttpRequest
+    private _event : Event,
+    private _xhr   : XMLHttpRequest,
+    private _obj   : Object = {}
   ){
     // lets rock
   }
@@ -35,8 +39,26 @@ export default class VanuatuRequestResponse{
     }
   }
 
+  get text(){
+    if(this._text == null){
+      if(this._obj.hasOwnProperty("text")){
+        this._text = (<any>this._obj).text;
+      }else{
+        this._text = "";
+      }
+    }
+    return this._text;
+  }
+
   get json(){
-    return 0;
+    if(this._json == null){
+      try{
+        this._json = JSON.parse( this.text );
+      }catch(e){
+        console.error(e);
+      }
+    }
+    return this._json;
   }
 
   get xhr(){
@@ -45,9 +67,10 @@ export default class VanuatuRequestResponse{
 
   get complete(){
     var evt = <ProgressEvent>this._event;
-    if(evt.loaded && evt.total)
+    if(evt.loaded && evt.total){
       return evt.loaded / evt.total;
-    else
+    }else{
       return null;
+    }
   }
 }

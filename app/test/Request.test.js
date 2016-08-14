@@ -1,6 +1,6 @@
 define(["require", "exports", "../../luminol/luminol/Request"], function (require, exports, Request_1) {
     "use strict";
-    var req = new Request_1.default("http://httpbin.org/image/svg")
+    var req = new Request_1.default("http://httpbin.org/image/jpeg")
         .on("progress", function (response) {
         console.log("progress", response.complete);
     })
@@ -11,7 +11,7 @@ define(["require", "exports", "../../luminol/luminol/Request"], function (requir
         console.log("abort", response);
     })
         .on("load", function (response) {
-        console.log("load", response.json);
+        console.log(response.json);
     })
         .get;
 });

@@ -27,17 +27,29 @@ define(["require", "exports", "./request/Response"], function (require, exports,
                 var response = new Response_1.default(event, _this._xhr);
                 _this._event.progress(response);
             };
-            var load = function (event) {
+            var abort = function (event) {
                 var response = new Response_1.default(event, _this._xhr);
-                _this._event.load(response);
+                _this._event.abort(response);
             };
             var error = function (event) {
                 var response = new Response_1.default(event, _this._xhr);
                 _this._event.error(response);
             };
-            var abort = function (event) {
-                var response = new Response_1.default(event, _this._xhr);
-                _this._event.abort(response);
+            var load = function (event) {
+                switch (_this._xhr.response.type) {
+                    case "application/json":
+                    case "plain/text":
+                        var reader = new FileReader();
+                        reader.onload = function () {
+                            var response = new Response_1.default(event, _this._xhr, { "text": reader.result });
+                            _this._event.load(response);
+                        };
+                        reader.readAsText(_this._xhr.response);
+                        break;
+                    default:
+                        var response = new Response_1.default(event, _this._xhr);
+                        _this._event.load(response);
+                }
             };
             this._xhr.addEventListener("progress", progress, false);
             this._xhr.addEventListener("load", load, false);

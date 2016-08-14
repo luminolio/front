@@ -35,9 +35,9 @@ export default class VanuatuRequest{
 			this._event.progress(response);
 		};
 
-		let load = (event) => {
+		let abort = (event) => {
 			let response = new Response(event, this._xhr);
-			this._event.load(response);
+			this._event.abort(response);
 		};
 
 		let error = (event) => {
@@ -45,9 +45,22 @@ export default class VanuatuRequest{
 			this._event.error(response);
 		};
 
-		let abort = (event) => {
-			let response = new Response(event, this._xhr);
-			this._event.abort(response);
+		let load = (event) => {
+			switch(this._xhr.response.type){
+				case "application/json":
+				case "plain/text":
+					var reader = new FileReader();
+			    reader.onload = () => {
+							let response = new Response(event, this._xhr, { "text": reader.result });
+							this._event.load(response);
+			    };
+			    reader.readAsText(this._xhr.response);
+					break;
+
+				default:
+					let response = new Response(event, this._xhr);
+					this._event.load(response);
+			}
 		};
 
 		this._xhr.addEventListener( "progress" , progress  , false );

@@ -1,10 +1,14 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     var VanuatuRequestResponse = (function () {
-        function VanuatuRequestResponse(_event, _xhr) {
+        function VanuatuRequestResponse(_event, _xhr, _obj) {
+            if (_obj === void 0) { _obj = {}; }
             this._event = _event;
             this._xhr = _xhr;
+            this._obj = _obj;
             this._blob = null;
+            this._text = null;
+            this._json = null;
             this._url = null;
             this._mime = {
                 images: [
@@ -40,9 +44,32 @@ define(["require", "exports"], function (require, exports) {
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(VanuatuRequestResponse.prototype, "text", {
+            get: function () {
+                if (this._text == null) {
+                    if (this._obj.hasOwnProperty("text")) {
+                        this._text = this._obj.text;
+                    }
+                    else {
+                        this._text = "";
+                    }
+                }
+                return this._text;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(VanuatuRequestResponse.prototype, "json", {
             get: function () {
-                return 0;
+                if (this._json == null) {
+                    try {
+                        this._json = JSON.parse(this.text);
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
+                }
+                return this._json;
             },
             enumerable: true,
             configurable: true
@@ -57,10 +84,12 @@ define(["require", "exports"], function (require, exports) {
         Object.defineProperty(VanuatuRequestResponse.prototype, "complete", {
             get: function () {
                 var evt = this._event;
-                if (evt.loaded && evt.total)
+                if (evt.loaded && evt.total) {
                     return evt.loaded / evt.total;
-                else
+                }
+                else {
                     return null;
+                }
             },
             enumerable: true,
             configurable: true
