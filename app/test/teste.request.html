@@ -5,25 +5,11 @@
     <title>teste.request.ts</title>
   </head>
   <body>
-    <script src="../../luminol/vendors/systemjs/system.js"></script>
-    <script>
-
-      //
-      //
-      //
-
-      System.config({
-        // transpiler: 'typescript',
-        defaultJSExtensions: true,
-      });
-
-      //
-      //
-      //
-
-      System
-        .import('Request.test.js');
-
+    <script type="text/javascript">
+      var require = {
+        urlArgs : "bust="+new Date().getTime()
+      };
     </script>
+    <script src="../../luminol/vendors/require.js" data-main="Request.test"></script>
   </body>
 </html>

@@ -1,29 +1,33 @@
-import VanuatuRequest from "../../luminol/luminol/Request";
+import Request from "../../luminol/luminol/Request";
 
 //
+// GET
 //
-//
-//
 
-class test{
-  static get(){
-    var req =
-      new VanuatuRequest("http://httpbin.org/get")
+var req =
 
-      .header
-        .contentType
-          .formUrlEncode
+  // new Request("http://httpbin.org/get")
+  // new Request("http://httpbin.org/bytes/100024")
+  // new Request("http://httpbin.org/image/jpeg")
+  // new Request("http://httpbin.org/image/png")
+  new Request("http://httpbin.org/image/svg")
 
-      .payload
-        .object({
-            nome: "Daniel",
-            snome: [
-              "de",
-              "andrade",
-              "varela"
-            ]
-        })
+  .on("progress", (response) => {
+    console.log("progress", response.complete);
+  })
 
-      .execute("get");
-  }
-}
+  .on("fail", (response) => {
+    console.log("fail", response);
+  })
+
+  .on("abort", (response) => {
+    console.log("abort", response);
+  })
+
+  .on("load", (response) => {
+    // console.log("load", response.data);
+    console.log("load", response.json);
+    // document.body.appendChild(response.img);
+  })
+
+  .get;

@@ -1,36 +1,18 @@
-System.register(["../../luminol/luminol/Request"], function(exports_1, context_1) {
+define(["require", "exports", "../../luminol/luminol/Request"], function (require, exports, Request_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
-    var Request_1;
-    var test;
-    return {
-        setters:[
-            function (Request_1_1) {
-                Request_1 = Request_1_1;
-            }],
-        execute: function() {
-            test = (function () {
-                function test() {
-                }
-                test.get = function () {
-                    var req = new Request_1.default("http://httpbin.org/get")
-                        .header
-                        .contentType
-                        .formUrlEncode
-                        .payload
-                        .object({
-                        nome: "Daniel",
-                        snome: [
-                            "de",
-                            "andrade",
-                            "varela"
-                        ]
-                    })
-                        .execute("get");
-                };
-                return test;
-            }());
-        }
-    }
+    var req = new Request_1.default("http://httpbin.org/image/svg")
+        .on("progress", function (response) {
+        console.log("progress", response.complete);
+    })
+        .on("fail", function (response) {
+        console.log("fail", response);
+    })
+        .on("abort", function (response) {
+        console.log("abort", response);
+    })
+        .on("load", function (response) {
+        console.log("load", response.json);
+    })
+        .get;
 });
 //# sourceMappingURL=Request.test.js.map

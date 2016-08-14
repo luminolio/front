@@ -1,71 +1,65 @@
-import VanuatuRequestHeader from "./request/RequestHeader";
-import VanuatuRequestPayload from "./request/RequestPayload";
-import VanuatuRequestObjectResponse from "./request/RequestObjectResponse";
+import Response from "./request/Response";
 
 export default class VanuatuRequest{
-	protected _payload = "";
-	private   _xhr     : XMLHttpRequest;
-	private   _event   = {
-		progress : function(vror : VanuatuRequestObjectResponse){},
-		load     : function(vror : VanuatuRequestObjectResponse){},
-		error    : function(vror : VanuatuRequestObjectResponse){},
-		abort    : function(vror : VanuatuRequestObjectResponse){}
+	private _payload       = "";
+	private _xhr           = new XMLHttpRequest();;
+	private _requestHeader = [];
+	private _event         = {
+		progress : function(vror){},
+		load     : function(vror){},
+		error    : function(vror){},
+		abort    : function(vror){}
 	};
 
 	constructor(private _url : string){
-		this._xhr = new XMLHttpRequest();
+		//
 	}
 
-  on(evt: string, fn: Function){
-    this._event[ evt ] = fn;
-  }
+	on(evt: string, fn: Function){
+		this._event[ evt ] = fn;
+		return this;
+	}
 
-  execute(method: string){
-    method = method.toUpperCase();
+	/**
+	 *
+	 */
+	execute(method: string){
+		method = method.toUpperCase();
 		this._xhr.open(method, this._url, true);
+		this._xhr.responseType = "blob";
 
-		let progress = function(event){
-			let percentComplete = event.loaded / event.total * 100;
-			this._event.progress(new VanuatuRequestObjectResponse(this, event, {
-					percent: percentComplete
-			}));
+		//console.log("requestHeader", this._requestHeader);
+
+		let progress = (event) => {
+			let response = new Response(event, this._xhr);
+			this._event.progress(response);
 		};
 
-		let load = function(event){
-			this._event.progress(new VanuatuRequestObjectResponse(this, event, {
-					// add data
-			}));
+		let load = (event) => {
+			let response = new Response(event, this._xhr);
+			this._event.load(response);
 		};
 
-		let fail = function(event){
-			this._event.progress(new VanuatuRequestObjectResponse(this, event, {
-					// add data
-			}));
+		let error = (event) => {
+			let response = new Response(event, this._xhr);
+			this._event.error(response);
 		};
 
-		let abort = function(event){
-			this._event.progress(new VanuatuRequestObjectResponse(this, event, {
-					// add data
-			}));
+		let abort = (event) => {
+			let response = new Response(event, this._xhr);
+			this._event.abort(response);
 		};
 
-		this._xhr.addEventListener("progress" , progress , false);
-		this._xhr.addEventListener("load"     , load     , false);
-		this._xhr.addEventListener("error"    , fail     , false);
-		this._xhr.addEventListener("abort"    , abort    , false);
+		this._xhr.addEventListener( "progress" , progress  , false );
+		this._xhr.addEventListener( "load"     , load      , false );
+		this._xhr.addEventListener( "error"    , error     , false );
+		this._xhr.addEventListener( "abort"    , abort     , false );
 
-		this._xhr.send(this._payload);
-  }
-
-	get header(){
-		return new VanuatuRequestHeader(this);
+		this._xhr.send();
 	}
 
-	get payload(){
-		return new VanuatuRequestPayload(this);
-	}
-
-	get xhr(){
-		return this.xhr;
+	get get(){
+		this.execute("GET");
+		return this;
 	}
 }
